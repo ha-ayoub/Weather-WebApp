@@ -12,3 +12,6 @@ Les données météo sont récupérées via l’API OpenWeather.
 ☁️ Conditions météo (nuages, pluie, etc.)
 💨 Vitesse du vent
 💧 Humidité
+
+
+<img width="2683" height="1593" alt="image" src="https://github.com/user-attachments/assets/510282b3-b1fb-4da2-a702-256e89efecb2" />
