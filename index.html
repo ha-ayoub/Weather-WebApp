@@ -1,118 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Météo</title>
 
-    <!-- icons -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
-    <!-- fonts -->
-    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,500,100,700,400,300,200,900&display=swap"
-        rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
-    <!-- css -->
-    <link rel="stylesheet" href="style.css">
-
-    <!-- js -->
-    <script src="weather.js" defer></script>
-    <script src="dayAndNight.js" defer></script>
-
-    <!-- favicon -->
-    <link rel="shortcut icon" href="cloudy.png" type="image/x-icon">
-
-    <title>Weather Update</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <div class="wrapper">
-        <header>
-            <div class="logo info-container"><i class="ri-cloudy-fill"></i> weather</div>
-            <div class="input-container info-container">
-                <button class='searchBtn'><i class="ri-search-line"></i></button>
-                <input type="text" placeholder='Search for a city' class='searchInput'>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <div class="wrapper">
+    <header>
+      <div class="logo info-box">
+        <i class="ri-cloud-windy-fill"></i>
+        <span>Skywatcher</span>
+      </div>
+
+      <div class="input-container info-box">
+        <i class="ri-search-line"></i>
+        <input class="searchInput" type="text" placeholder="Rechercher une ville…" autocomplete="off" />
+        <button class="searchBtn" title="Rechercher">
+          <i class="ri-arrow-right-line"></i>
+        </button>
+      </div>
+
+      <button class="icon-btn getLocation info-box" title="Ma position">
+        <i class="ri-map-pin-line"></i>
+      </button>
+
+      <button class="icon-btn toggleMode info-box" title="Changer le thème">
+        <i class="ri-moon-line"></i>
+      </button>
+    </header>
+
+    <!-- MAIN CURRENT WEATHER -->
+    <main>
+      <section class="current-section">
+        <!-- Left: temp + icon -->
+        <div class="card card--main" id="cardMain">
+          <div class="main-visual">
+            <div class="forecast-icon" id="forecastIcon">
+              <div class="icon-placeholder pulse"></div>
             </div>
-            <div class="getLocation info-container">
-                <i class="ri-map-pin-line"></i>
+            <div class="main-info">
+              <div class="temp" id="currTemp">--°C</div>
+              <div class="forecast-label" id="forecast">--</div>
             </div>
-            <div class="toggleMode info-container">
-                <i class="ri-sun-line"></i>
-            </div>
-        </header>
-        <main>
-            <section class="currTemp-container">
-                <div class="left">
-                    <div class="forecastIcon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/9546/9546618.png" class='forecast-img'>
-                    </div>
-                    <div class="info">
-                        <p class="forecast">--</p>
-                        <p class="temp">00.0&degC</p>
-                    </div>
-                </div>
-                <div class="right">
-                    <p class="currLocation"><i class="ri-map-pin-line"></i> <span class='regionName'>--</span> </p>
-                    <p class="currDate"><i class="ri-calendar-line"></i> <span class='today'>-/-/-</span></p>
-                </div>
-            </section>
+          </div>
+        </div>
 
-            <section class="more-info">
-                <div class="infoBox humidity">
-                    <div class="icon"><i class="ri-drop-line"></i></div>
-                    <div class="text">
-                        <div class="parameter">Humidity</div>
-                        <div class="value">0%</div>
-                    </div>
-                </div>
+        <div class="side-cards">
+          <div class="card card--side" id="cardLocation">
+            <i class="ri-map-pin-2-fill"></i>
+            <div class="side-label">Lieu</div>
+            <div class="side-value" id="regionName">--</div>
+          </div>
+          <div class="card card--side" id="cardDate">
+            <i class="ri-calendar-event-fill"></i>
+            <div class="side-label">Aujourd'hui</div>
+            <div class="side-value" id="today">--</div>
+          </div>
+        </div>
+      </section>
 
-                <div class="infoBox windSpeed">
-                    <div class="icon"><i class="ri-windy-line"></i></div>
-                    <div class="text">
-                        <div class="parameter">Wind Speed</div>
-                        <div class="value">0m/s</div>
-                    </div>
-                </div>
+      <section class="info-grid" id="infoGrid">
+        <div class="card info-card humidity">
+          <div class="info-icon"><i class="ri-drop-fill"></i></div>
+          <div class="info-body">
+            <div class="info-param">Humidité</div>
+            <div class="info-value humidity-val">--%</div>
+          </div>
+        </div>
+        <div class="card info-card wind">
+          <div class="info-icon"><i class="ri-windy-fill"></i></div>
+          <div class="info-body">
+            <div class="info-param">Vent</div>
+            <div class="info-value wind-val">-- m/s</div>
+          </div>
+        </div>
+        <div class="card info-card feel">
+          <div class="info-icon"><i class="ri-temp-hot-fill"></i></div>
+          <div class="info-body">
+            <div class="info-param">Ressenti</div>
+            <div class="info-value feel-val">--°C</div>
+          </div>
+        </div>
+        <div class="card info-card tempMin">
+          <div class="info-icon"><i class="ri-arrow-down-line"></i></div>
+          <div class="info-body">
+            <div class="info-param">Min</div>
+            <div class="info-value tempMin-val">--°C</div>
+          </div>
+        </div>
+        <div class="card info-card tempMax">
+          <div class="info-icon"><i class="ri-arrow-up-line"></i></div>
+          <div class="info-body">
+            <div class="info-param">Max</div>
+            <div class="info-value tempMax-val">--°C</div>
+          </div>
+        </div>
+        <div class="card info-card visibility">
+          <div class="info-icon"><i class="ri-eye-fill"></i></div>
+          <div class="info-body">
+            <div class="info-param">Visibilité</div>
+            <div class="info-value visibility-val">-- km</div>
+          </div>
+        </div>
+      </section>
 
-                <div class="infoBox realFeel">
-                    <div class="icon"><i class="ri-temp-hot-fill"></i></div>
-                    <div class="text">
-                        <div class="parameter">Real Feel</div>
-                        <div class="value">00.0&degC</div>
-                    </div>
-                </div>
+      <section class="forecast-section">
+        <h2 class="section-title">Prévisions <span>7 jours</span></h2>
+        <div class="forecast-grid" id="forecastGrid">
+        </div>
+      </section>
 
-                <div class="infoBox tempMin">
-                    <div class="icon"><i class="ri-arrow-drop-down-fill"></i></div>
-                    <div class="text">
-                        <div class="parameter">Temp Min</div>
-                        <div class="value">00.0&degC</div>
-                    </div>
-                </div>
+      <section class="chart-section">
+        <h2 class="section-title">Courbe de <span>température</span></h2>
+        <div class="chart-wrapper card">
+          <canvas id="tempChart"></canvas>
+        </div>
+      </section>
+    </main>
 
-                <div class="infoBox tempMax">
-                    <div class="icon"><i class="ri-arrow-drop-up-fill"></i></div>
-                    <div class="text">
-                        <div class="parameter">Temp Max</div>
-                        <div class="value">00.0&degC</div>
-                    </div>
-                </div>
+    <footer>
+      <p>Developped by <span>ha-ayoub</span>.</p>
+    </footer>
+  </div>
 
-                <div class="infoBox visibility">
-                    <div class="icon"><i class="ri-eye-line"></i></div>
-                    <div class="text">
-                        <div class="parameter">Visibility</div>
-                        <div class="value">0km<div>
-                            </div>
-                        </div>
-
-            </section>
-        </main>
-
-        <footer>
-            <p>Developped by <span>ha-ayoub</span>.</p>
-        </footer>
-    </div>
+  <script src="weather.js"></script>
+  <script src="dayAndNight.js"></script>
 </body>
-
 </html>
